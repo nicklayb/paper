@@ -1,4 +1,4 @@
-defmodule Article.DataCase do
+defmodule Paper.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -10,7 +10,7 @@ defmodule Article.DataCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use Article.DataCase, async: true`, although
+  by setting `use Paper.DataCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -18,20 +18,20 @@ defmodule Article.DataCase do
 
   using do
     quote do
-      alias Article.Repo
+      alias Paper.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Article.DataCase
+      import Paper.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Article.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Paper.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Article.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Paper.Repo, {:shared, self()})
     end
 
     :ok

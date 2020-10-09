@@ -1,4 +1,4 @@
-defmodule ArticleWeb.ConnCase do
+defmodule PaperWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -11,7 +11,7 @@ defmodule ArticleWeb.ConnCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use ArticleWeb.ConnCase, async: true`, although
+  by setting `use PaperWeb.ConnCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -22,20 +22,20 @@ defmodule ArticleWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import ArticleWeb.ConnCase
+      import PaperWeb.ConnCase
 
-      alias ArticleWeb.Router.Helpers, as: Routes
+      alias PaperWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint ArticleWeb.Endpoint
+      @endpoint PaperWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Article.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Paper.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Article.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Paper.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

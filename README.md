@@ -1,2 +1,2 @@
-# Article
+# Paper
 

@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+  postgresql:
+    image: postgres:12-alpine
+    container_name: paper-postgres
+    environment:
+      - POSTGRES_DB=paper_dev
+      - POSTGRES_PASSWORD=development
+    ports:
+      - 5432:5432
+    volumes:
+      - paper_psql:/var/lib/postgresql/data
+volumes:
+  paper_psql:

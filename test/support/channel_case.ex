@@ -1,4 +1,4 @@
-defmodule ArticleWeb.ChannelCase do
+defmodule PaperWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -11,7 +11,7 @@ defmodule ArticleWeb.ChannelCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use ArticleWeb.ChannelCase, async: true`, although
+  by setting `use PaperWeb.ChannelCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -21,18 +21,18 @@ defmodule ArticleWeb.ChannelCase do
     quote do
       # Import conveniences for testing with channels
       import Phoenix.ChannelTest
-      import ArticleWeb.ChannelCase
+      import PaperWeb.ChannelCase
 
       # The default endpoint for testing
-      @endpoint ArticleWeb.Endpoint
+      @endpoint PaperWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Article.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Paper.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Article.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Paper.Repo, {:shared, self()})
     end
 
     :ok

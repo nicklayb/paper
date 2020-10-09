@@ -7,16 +7,22 @@
 # General application configuration
 use Mix.Config
 
-config :article,
-  ecto_repos: [Article.Repo]
+config :paper,
+  ecto_repos: [Paper.Repo]
 
 # Configures the endpoint
-config :article, ArticleWeb.Endpoint,
-  url: [host: "localhost"],
-  secret_key_base: "kt8s9I1RiqB2pM6wz2Kym18s/rGQ7K2fNO6e7F6yKl2l0m6WpKzzCWRSc/Bl7JZx",
-  render_errors: [view: ArticleWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: Article.PubSub,
-  live_view: [signing_salt: "ep6HsSFN"]
+config :paper, PaperWeb.Endpoint,
+  url: [host: System.get_env("HOST") || "localhost"],
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  render_errors: [view: PaperWeb.ErrorView, accepts: ~w(html json)],
+  pubsub_server: Paper.PubSub,
+  live_view: [signing_salt: System.get_env("LIVE_VIEW_SALT")]
+
+# Configure your database
+config :paper, Paper.Repo,
+  pool_size: System.get_env("DATABASE_POOL_SIZE") |> String.to_integer(),
+  url: System.get_env("DATABASE_URL"),
+  ssl: false
 
 # Configures Elixir's Logger
 config :logger, :console,
