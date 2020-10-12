@@ -1,4 +1,4 @@
-defmodule PaperWeb.ErrorHelpers do
+defmodule PaperWeb.Error.Helpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """

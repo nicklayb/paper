@@ -32,6 +32,19 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :paper, PaperWeb.Authentication,
+  issuer: "paper",
+  secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+
+config :ueberauth, Ueberauth,
+  providers: [
+    google: { Ueberauth.Strategy.Google, [] },
+  ]
+
+config :ueberauth, Ueberauth.Strategy.Google.OAuth,
+  client_id: System.get_env("GOOGLE_CLIENT_ID"),
+  client_secret: System.get_env("GOOGLE_CLIENT_SECRET")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

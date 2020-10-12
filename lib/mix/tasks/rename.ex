@@ -6,7 +6,7 @@ defmodule Mix.Tasks.Rename do
     defstruct options: [], files: [], module_name: nil, original: nil
 
     @template [strict: [dry_run: :boolean]]
-    @original "Article"
+    @original "Paper"
     def init(args) do
       {options, [module_name | _], _} = OptionParser.parse(args, @template)
 

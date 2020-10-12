@@ -1,5 +1,5 @@
-defmodule PaperWeb.ErrorView do
-  use PaperWeb, :view
+defmodule PaperWeb.Errors.View do
+  use Phoenix.View, root: "lib/paper_web", path: "errors/templates", namespace: PaperWeb
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.
