@@ -1,4 +1,5 @@
 <p role="alert"><%= get_flash(@conn, :info) %></p>
 <p role="alert"><%= get_flash(@conn, :success) %></p>
 <p role="alert"><%= get_flash(@conn, :error) %></p>
+<%= render("header.html", conn: @conn, assigns: assigns) %>
 <%= @inner_content %>

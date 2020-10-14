@@ -1,9 +1,7 @@
-defmodule PaperWeb.Articles.Controller do
+defmodule PaperWeb.ArticleController do
   use PaperWeb, :controller
 
   alias Paper.Articles
-
-  plug(:put_view, PaperWeb.Articles.View)
 
   def index(conn, _, _) do
     render(conn, "index.html", articles: Articles.list())
@@ -19,7 +17,7 @@ defmodule PaperWeb.Articles.Controller do
     with {:ok, _article} <- Articles.create(article) do
       conn
       |> put_flash(:success, "Bravo champion! 🥇")
-      |> redirect(to: Routes.articles_path(conn, :index))
+      |> redirect(to: Routes.article_path(conn, :index))
     end
   end
 end

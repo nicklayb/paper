@@ -1,5 +1,5 @@
 <%= component "page_header.html", title: "Articles" do %>
-  <%= link "New", to: Routes.articles_path(@conn, :new), class: "button is-primary" %>
+  <%= link "New", to: Routes.article_path(@conn, :new), class: "button is-primary" %>
 <% end %>
 <div class="container">
   <table class="table is-fullwidth">

@@ -3,7 +3,6 @@
   <%= render("head.html", conn: @conn) %>
 
   <body>
-    <%= render("header.html", conn: @conn, assigns: assigns) %>
     <%= @inner_content %>
   </body>
 </html>

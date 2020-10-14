@@ -5,7 +5,7 @@ defmodule PaperWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug(:put_root_layout, {PaperWeb.Layouts.View, :root})
+    plug(:put_root_layout, {PaperWeb.LayoutView, :root})
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -18,19 +18,19 @@ defmodule PaperWeb.Router do
   scope "/", PaperWeb do
     pipe_through [:browser]
 
-    get "/", Authentication.Controller, :new, as: "authentication"
-    get "/auth/:provider", Authentication.Controller, :request, as: "authentication"
-    get "/auth/:provider/callback", Authentication.Controller, :callback, as: "authentication"
+    get "/", AuthenticationController, :new
+    get "/auth/:provider", AuthenticationController, :request
+    get "/auth/:provider/callback", AuthenticationController, :callback
   end
 
   scope "/", PaperWeb do
     pipe_through [:browser, :authenticated]
 
-    get "/users", Users.Controller, :index, as: "users"
-    get "/articles", Articles.Controller, :index, as: "articles"
-    get "/articles/new", Articles.Controller, :new, as: "articles"
-    post "/articles", Articles.Controller, :create, as: "articles"
-    delete "/logout", Authentication.Controller, :delete, as: "authentication"
+    get "/users", UserController, :index
+    get "/articles", ArticleController, :index
+    get "/articles/new", ArticleController, :new
+    post "/articles", ArticleController, :create
+    delete "/logout", AuthenticationController, :delete
 
     live "/light", LightLive
   end

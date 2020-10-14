@@ -13,6 +13,10 @@ defmodule PaperWeb do
 
   def view do
     quote do
+      use Phoenix.View,
+        root: "lib/paper_web/templates",
+        namespace: PaperWeb
+
       import Phoenix.Controller,
         only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
 
@@ -59,7 +63,7 @@ defmodule PaperWeb do
       use Phoenix.HTML
       import Phoenix.LiveView.Helpers
       import Phoenix.View
-      import PaperWeb.Errors.Helpers
+      import PaperWeb.ErrorHelpers
       import PaperWeb.Gettext
       alias PaperWeb.Router.Helpers, as: Routes
       import PaperWeb.Components

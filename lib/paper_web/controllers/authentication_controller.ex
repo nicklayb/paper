@@ -1,10 +1,12 @@
-defmodule PaperWeb.Authentication.Controller do
+defmodule PaperWeb.AuthenticationController do
   use PaperWeb, :controller
 
   alias Paper.Users
   alias PaperWeb.Authentication
 
   plug Ueberauth
+
+  plug :put_layout, {PaperWeb.LayoutView, "unauthenticated.html"}
 
   def new(conn, _, _) do
     render(
@@ -25,7 +27,7 @@ defmodule PaperWeb.Authentication.Controller do
       {:ok, user} ->
         conn
         |> Authentication.log_in(user)
-        |> redirect(to: Routes.users_path(conn, :index))
+        |> redirect(to: Routes.user_path(conn, :index))
       {:error, _error_changeset} ->
         conn
         |> put_flash(:error, "Authentication failed.")
