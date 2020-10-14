@@ -1,0 +1,26 @@
+<%= component "page_header.html", title: "New article"%>
+<div class="container">
+  <%= form_for @changeset, Routes.articles_path(@conn, :create), fn f -> %>
+    <%= inputs_for f, :article_contents, fn article_content -> %>
+      <div class="field">
+        <%= label article_content, :locale, "Language", class: "label" %>
+        <div class="select">
+          <%= select article_content, :locale, ["en", "fr"] %>
+        </div>
+      </div>
+      <div class="field">
+        <%= label article_content, :title, "Title", class: "label" %>
+        <%= text_input article_content, :title, class: "input" %>
+      </div>
+
+      <div class="field">
+        <%= label article_content, :body, "Body", class: "label" %>
+        <%= textarea article_content, :body, class: "input" %>
+      </div>
+    <% end %>
+
+    <div class="buttons is-right">
+      <%= submit "Save", class: "button is-primary" %>
+    </div>
+  <% end %>
+</div>

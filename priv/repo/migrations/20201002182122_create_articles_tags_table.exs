@@ -3,8 +3,8 @@ defmodule Paper.Repo.Migrations.CreateArticlesTagsTable do
 
   def change do
     create table(:articles_tags) do
-      add :article_id, references(:articles, on_delete: :delete_all)
-      add :tag_id, references(:tags, on_delete: :delete_all)
+      add :article_id, references(:articles, on_delete: :delete_all), null: false
+      add :tag_id, references(:tags, on_delete: :delete_all), null: false
 
       timestamps()
     end

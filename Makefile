@@ -61,6 +61,6 @@ test: ## Run the test suite
 lint: ## Run the linter
 	mix credo
 
-.PHONY: db-reset
-db-reset: ## Reset the DB
+.PHONY: reset-db
+reset-db: ## Reset the database
 	mix ecto.reset

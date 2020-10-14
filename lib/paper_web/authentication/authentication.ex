@@ -2,6 +2,7 @@ defmodule PaperWeb.Authentication do
   @moduledoc """
   Implementation module for Guardian and functions for authentication.
   """
+
   use Guardian, otp_app: :paper
   alias Paper.{User, Users}
 
@@ -20,9 +21,5 @@ defmodule PaperWeb.Authentication do
 
   def log_out(conn) do
     __MODULE__.Plug.sign_out(conn)
-  end
-
-  def get_current_user(conn) do
-    __MODULE__.Plug.current_resource(conn)
   end
 end

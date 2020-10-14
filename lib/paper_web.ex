@@ -1,43 +1,38 @@
 defmodule PaperWeb do
-  @moduledoc """
-  The entrypoint for defining your web interface, such
-  as controllers, views, channels and so on.
-
-  This can be used in your application as:
-
-      use PaperWeb, :controller
-      use PaperWeb, :view
-
-  The definitions below will be executed for every view,
-  controller, etc, so keep them short and clean, focused
-  on imports, uses and aliases.
-
-  Do NOT define functions inside the quoted expressions
-  below. Instead, define any helper function in modules
-  and import those modules here.
-  """
-
   def controller do
     quote do
       use Phoenix.Controller, namespace: PaperWeb
+      use PaperWeb.Controller
 
       import Plug.Conn
       import PaperWeb.Gettext
       alias PaperWeb.Router.Helpers, as: Routes
+      import Phoenix.LiveView.Controller
     end
   end
 
   def view do
     quote do
-      use Phoenix.View,
-        root: "lib/paper_web/templates",
-        namespace: PaperWeb
-
-      # Import convenience functions from controllers
       import Phoenix.Controller,
         only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
 
-      # Include shared imports and aliases for views
+      unquote(view_helpers())
+    end
+  end
+
+  def live_view do
+    quote do
+      use Phoenix.LiveView,
+        layout: {PaperWeb.Layouts.View, "live.html"}
+
+      unquote(view_helpers())
+    end
+  end
+
+  def live_component do
+    quote do
+      use Phoenix.LiveComponent
+
       unquote(view_helpers())
     end
   end
@@ -48,6 +43,7 @@ defmodule PaperWeb do
 
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 
@@ -60,15 +56,13 @@ defmodule PaperWeb do
 
   defp view_helpers do
     quote do
-      # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
-
-      # Import basic rendering functionality (render, render_layout, etc)
+      import Phoenix.LiveView.Helpers
       import Phoenix.View
-
-      import PaperWeb.ErrorHelpers
+      import PaperWeb.Errors.Helpers
       import PaperWeb.Gettext
       alias PaperWeb.Router.Helpers, as: Routes
+      import PaperWeb.Components
     end
   end
 

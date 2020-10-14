@@ -9,6 +9,6 @@ defmodule Paper.Repo.Migrations.CreateUserTable do
 
       timestamps()
     end
-    create unique_index("users", [:email])
+    create unique_index(:users, [:email])
   end
 end

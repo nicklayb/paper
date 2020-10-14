@@ -1,35 +1,21 @@
 defmodule Paper.Article do
-  use Ecto.Schema
-  import Ecto.Changeset
+  use Paper, :schema
 
-  alias Paper.User
+  alias Paper.{Article, ArticleContent, User}
 
   schema "articles" do
-    field(:title_en, :string)
-    field(:title_fr, :string)
-    field(:body_en, :string)
-    field(:body_fr, :string)
-    field(:slug_en, :string)
-    field(:slug_fr, :string)
-
-    belongs_to(:author, User, foreign_key: :author_id)
+    belongs_to :author, User, foreign_key: :author_id
+    has_many :article_contents, ArticleContent
 
     timestamps()
   end
 
   @required ~w(author_id)a
-  @optional ~w(title_en title_fr body_en body_fr slug_en slug_fr)a
-  def changeset(article, params) do
+  @spec changeset(%Article{}, map()) :: Ecto.Changeset.t()
+  def changeset(%Article{} = article, params) do
     article
-    |> cast(params, @optional ++ @required)
+    |> cast(params, @required)
     |> validate_required(@required)
-  end
-
-  def title_to_slug(title) do
-    title
-    |> String.downcase
-    |> String.normalize(:nfd)
-    |> String.replace(~r/[^a-z0-9\s-]/, "")
-    |> String.replace(~r/(\s|-)+/, "-")
+    |> cast_assoc(:article_contents)
   end
 end

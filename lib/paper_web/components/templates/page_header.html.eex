@@ -1,0 +1,17 @@
+<div class="hero is-light mb-5">
+  <div class="hero-body">
+    <div class="container">
+      <div class="level">
+        <div class="level-left">
+          <div class="level-item">
+            <h2 class="title is-3"><%= assigns[:title] %></h2>
+          </div>
+        </div>
+        <%= if assigns[:do] do %>
+          <div class="level-right"><%= assigns[:do] %>
+</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

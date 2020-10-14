@@ -8,6 +8,6 @@ defmodule PaperWeb.Authentication.ErrorHandler do
     IO.inspect(error)
     conn
     |> put_flash(:error, "Authentication error.")
-    |> redirect(to: Routes.session_path(conn, :new))
+    |> redirect(to: Routes.authentication_path(conn, :new))
   end
 end

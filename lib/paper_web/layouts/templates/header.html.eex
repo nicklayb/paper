@@ -1,10 +1,20 @@
-<nav>
-  <ul>
-    <li>
-      <%= link "Users", to: Routes.user_path(@conn, :index) %>
-    </li>
-    <li>
-      <%= link "Logout", to: Routes.authentication_path(@conn, :delete), method: :delete %>
-    </li>
-  </ul>
+<nav class="has-background-dark px-4 py-2" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-narrow is-flex is-align-items-center mr-4">
+        <%= link to: Routes.users_path(@conn, :index) do %>
+          <h1 class="title is-4 has-text-light has-text-weight-normal logo">PAPER</h1>
+        <% end %>
+      </div>
+
+      <div class="column is-flex is-align-items-center">
+        <%= link "Users", to: Routes.users_path(@conn, :index), class: "mr-6 has-text-light" %>
+        <%= link "Articles", to: Routes.articles_path(@conn, :index), class: "mr-6 has-text-light" %>
+      </div>
+
+      <div class="column is-narrow is-flex is-align-items-center">
+        <%= link "Logout", to: Routes.authentication_path(@conn, :delete), method: :delete, class: "has-text-light" %>
+      </div>
+    </div>
+  </div>
 </nav>

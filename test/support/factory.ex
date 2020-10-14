@@ -1,6 +1,8 @@
 defmodule Paper.Factory do
   use ExMachina.Ecto, repo: Paper.Repo
 
+  alias Paper.ArticleContent
+
   def user_factory do
     %Paper.User{
       first_name: "Richard",
@@ -11,11 +13,18 @@ defmodule Paper.Factory do
 
   def article_factory do
     %Paper.Article{
-      title_en: "The internet we deserve",
-      title_fr: "L'internet que l'on mérite",
-      body_en: Faker.Lorem.paragraph(),
-      body_fr: Faker.Lorem.paragraph(),
-      author: build(:user)
+      author: build(:user),
+      article_contents: build_list(2, :article_content)
+    }
+  end
+
+  def article_content_factory do
+    title = Faker.Lorem.sentence()
+    %Paper.ArticleContent{
+      locale: sequence(:locale, ["en", "fr"]),
+      title: title,
+      body: Faker.Lorem.paragraph(),
+      slug: ArticleContent.title_to_slug(title),
     }
   end
 end
