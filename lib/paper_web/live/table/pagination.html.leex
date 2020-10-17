@@ -1,0 +1,37 @@
+<div class="field is-grouped is-grouped-centered mb-6">
+  <div class="control">
+    <%= if @pagination.page > 1 do %>
+      <button type="button" class="button" phx-click="prev">
+        <span><</span>
+      </button>
+    <% end %>
+  </div>
+
+  <%= for i <- pagination_range(@pagination), i > 0 do %>
+    <div class="control">
+      <button
+        type="button"
+        class="button <%= if @pagination.page === i, do: "is-primary" %>"
+        phx-click="set-page"
+        phx-value-page="<%= i %>"
+      >
+        <%= i %>
+      </button>
+    </div>
+  <% end %>
+
+  <div class="control">
+    <button type="button" class="button" phx-click="next">
+      <span>></span>
+    </button>
+  </div>
+  <div class="control">
+    <form phx-change="select-per-page">
+      <div class="select">
+        <select name="per-page">
+          <%= options_for_select per_page_options(), @pagination.per_page %>
+        <select>
+      </div>
+    </form>
+  </div>
+</div>

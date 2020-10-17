@@ -27,7 +27,7 @@ defmodule PaperWeb.AuthenticationController do
       {:ok, user} ->
         conn
         |> Authentication.log_in(user)
-        |> redirect(to: Routes.user_path(conn, :index))
+        |> redirect(to: Routes.user_index_path(conn, :index))
       {:error, _error_changeset} ->
         conn
         |> put_flash(:error, "Authentication failed.")

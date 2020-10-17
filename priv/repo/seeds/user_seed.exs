@@ -5,6 +5,14 @@ defmodule UserSeed do
     Enum.map(users(), fn params ->
       {:ok, user} = seed_user(params)
     end)
+
+    Enum.map(1..1000, fn n ->
+      {:ok, user} = seed_user(%{
+        first_name: "John",
+        last_name: "Doe - #{n}",
+        email: "john#{n}@doe.com"
+      })
+    end)
   end
 
   def seed_user(params) do

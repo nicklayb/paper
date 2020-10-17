@@ -20,6 +20,13 @@ defmodule Paper do
     end
   end
 
+  def query do
+    quote do
+      use Paper.Query
+      import Ecto.Query
+    end
+  end
+
   @doc """
   When used, dispatch to the appropriate context/schema/etc.
   """

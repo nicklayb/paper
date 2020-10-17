@@ -1,6 +1,5 @@
 defmodule Paper.Users do
   use Paper, :context
-
   alias Paper.{Repo, User}
 
   @spec create(map() | Ueberauth.t()) :: {:ok, %User{}}
@@ -38,8 +37,21 @@ defmodule Paper.Users do
     |> Repo.get_by(email: email)
   end
 
-  @spec list() :: [%User{}]
+  @spec list :: [%User{}]
   def list, do: Repo.all(User)
+
+  @spec list(keyword()) :: [%User{}]
+  def list(criteria) do
+    query = from(u in User)
+
+    Enum.reduce(criteria, query, fn
+      {:paginate, %{page: page, per_page: per_page}}, query ->
+        from q in query,
+          offset: ^((page - 1) * per_page),
+          limit: ^per_page
+    end)
+    |> Repo.all()
+  end
 
   @spec get_or_register(Ueberauth.Auth.t()) :: {:ok, %User{}} | {:error, Ecto.Changeset.t()}
   def get_or_register(%Ueberauth.Auth{info: %{email: email} = info }) do

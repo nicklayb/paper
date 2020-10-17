@@ -5,12 +5,12 @@ defmodule PaperWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug(:put_root_layout, {PaperWeb.LayoutView, :root})
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
 
   pipeline :authenticated do
+    plug(:put_root_layout, {PaperWeb.LayoutView, :root})
     plug PaperWeb.Authentication.Pipeline
     plug PaperWeb.Authentication.SetCurrentUser
   end
@@ -26,12 +26,12 @@ defmodule PaperWeb.Router do
   scope "/", PaperWeb do
     pipe_through [:browser, :authenticated]
 
-    get "/users", UserController, :index
+    # get "/users", UserController, :index
     get "/articles", ArticleController, :index
     get "/articles/new", ArticleController, :new
     post "/articles", ArticleController, :create
     delete "/logout", AuthenticationController, :delete
 
-    live "/light", LightLive
+    live "/users", UserLive.Index, :index
   end
 end
