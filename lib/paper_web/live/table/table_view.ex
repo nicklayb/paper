@@ -57,10 +57,10 @@ defmodule PaperWeb.TableView do
 
       def get_records(_), do: []
 
-      def route_path(socket, path_params) do
-        {module, func, params} = socket.assigns.patch_route
-        params = ([socket | params] ++ [path_params])
-        apply(module, func, params)
+      def route_path(%{assigns: %{patch_route_mfa: patch_route_mfa}} = socket, path_params) do
+        {module, func, args} = patch_route_mfa
+        args = ([socket | args] ++ [path_params])
+        apply(module, func, args)
       end
 
       def pagination_params(params) do

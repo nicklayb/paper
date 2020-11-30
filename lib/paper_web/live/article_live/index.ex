@@ -10,7 +10,7 @@ defmodule PaperWeb.ArticleLive.Index do
 
     socket = assign(socket,
       changeset: Articles.new(),
-      patch_route: {Routes, :article_index_path, [:index]},
+      patch_route_mfa: {Routes, :article_index_path, [:index]},
       current_user_id: current_user.id
     )
 
@@ -26,19 +26,10 @@ defmodule PaperWeb.ArticleLive.Index do
     {:noreply, socket}
   end
 
-  def apply_action(socket, :index, _params) do
-    assign(socket, show_modal: false)
-  end
-
-  def apply_action(socket, :new, _params) do
-    assign(socket, show_modal: true)
-  end
-
+  def apply_action(socket, :index, _params), do: assign(socket, show_modal: false)
+  def apply_action(socket, :new, _params), do: assign(socket, show_modal: true)
   def apply_action(socket, _live_action, _params) do
-    push_patch(socket,
-      to: Routes.article_index_path(socket, :index),
-      replace: true
-    )
+    push_patch(socket, to: Routes.article_index_path(socket, :index), replace: true)
   end
 
   def get_records(socket) do

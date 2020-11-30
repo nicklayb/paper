@@ -5,7 +5,7 @@ defmodule PaperWeb.UserLive.Index do
   alias PaperWeb.TableView
 
   def mount(_params, _session, socket) do
-    socket = assign(socket, patch_route: {Routes, :user_index_path, [:index]})
+    socket = assign(socket, patch_route_mfa: {Routes, :user_index_path, [:index]})
     {:ok, socket, temporary_assigns: [records: []]}
   end
 
@@ -22,6 +22,4 @@ defmodule PaperWeb.UserLive.Index do
   end
 
   table_event_handlers()
-
-  def full_name(user), do: User.full_name(user)
 end

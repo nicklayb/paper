@@ -1,18 +1,18 @@
-<%= shared "page_header.html", title: "Users" %>
+<%= shared "page_header.html", title: gettext("Users") %>
 
 <div class="container">
   <table class="table is-fullwidth">
     <thead>
       <tr>
-        <th>Email</th>
-        <th>Name</th>
+        <th><%= gettext("Email") %></th>
+        <th><%= gettext("Name") %></th>
       </tr>
     </thead>
     <tbody>
       <%= for user <- @records do %>
         <tr>
           <td><%= user.email %></td>
-          <td><%= full_name(user) %></td>
+          <td><%= User.full_name(user) %></td>
         </tr>
       <% end %>
     </tbody>
