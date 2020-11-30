@@ -21,7 +21,7 @@ defmodule PaperWeb.ArticleLive.Edit do
     |> Map.get(:locale)
   end
 
-  def locale(form), do: form.data.locale
+  def locale(form), do: Changeset.get_field(form.source, :locale)
 
   def locale_selector(locale) do
     ~E"""
