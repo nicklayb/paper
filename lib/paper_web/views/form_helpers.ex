@@ -3,10 +3,9 @@ defmodule PaperWeb.FormHelpers do
 
   def input_field(form, field, options \\ []) do
     type = options[:type] || Phoenix.HTML.Form.input_type(form, field)
-
     content_tag :div, class: "field" do
-      label = label(form, field, humanize(field), class: "label #{state_class(form, field)}")
-      input = input(type, form, field, class: "input #{state_class(form, field)}")
+      label = label(form, field, humanize(field), class: "label")
+      input = input(type, form, field)
       error = PaperWeb.ErrorHelpers.error_tag(form, field)
       [label, input, error || ""]
     end
@@ -15,7 +14,8 @@ defmodule PaperWeb.FormHelpers do
   defp state_class(form, field) do
     cond do
       !form.source.action -> ""
-      form.errors[field] -> "is-danger"
+      form.errors[field] -> "is-danger "
+      true -> ""
     end
   end
 
@@ -28,6 +28,16 @@ defmodule PaperWeb.FormHelpers do
         end
       ]
     end
+  end
+
+  defp input(:text_input, form, field) do
+    class = state_class(form, field) <> "input"
+    apply(Phoenix.HTML.Form, :text_input, [form, field, [class: class]])
+  end
+
+  defp input(:textarea, form, field) do
+    class = state_class(form, field) <> "textarea"
+    apply(Phoenix.HTML.Form, :textarea, [form, field, [class: class]])
   end
 
   defp input(type, form, field, input_options) do

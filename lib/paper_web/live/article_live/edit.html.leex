@@ -9,6 +9,7 @@
       <%= if locale(ac) == @locale do %>
         <%= text_input ac, :locale, type: "hidden" %>
         <%= input_field ac, :title %>
+        <%= input_field ac, :body, type: :textarea %>
       <% end %>
     <% end %>
   </form>

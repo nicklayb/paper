@@ -50,8 +50,13 @@ defmodule PaperWeb.ArticleLive.Edit do
   end
 
   def handle_event("article_change", %{"article" => article_params}, %{assigns: %{changeset: changeset, article: article, locale: locale}} = socket) do
-    {:ok, article} = Articles.update(article, article_params)
-    socket = assign(socket, article: article, changeset: Articles.change(article))
-    {:noreply, socket}
+    case Articles.update(article, article_params) do
+      {:ok, article} ->
+        socket = assign(socket, article: article, changeset: Articles.change(article))
+        {:noreply, socket}
+      {:error, changeset} ->
+        socket = assign(socket, article: article, changeset: changeset)
+        {:noreply, socket}
+    end
   end
 end
