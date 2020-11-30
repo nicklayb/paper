@@ -12,9 +12,9 @@ defmodule Paper.User do
 
   @required ~w(email)a
   @optional ~w(first_name last_name)a
-  def changeset(user, params) do
+  def changeset(user, attrs) do
     user
-    |> cast(params, @required ++ @optional)
+    |> cast(attrs, @required ++ @optional)
     |> validate_required(@required)
     |> unique_constraint(:email)
   end

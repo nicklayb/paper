@@ -1,0 +1,15 @@
+<div class="container mt-5">
+  <form phx-change="locale-change" class="mb-4">
+    <%= locale_selector(@locale) %>
+  </form>
+
+  <%= f = form_for @changeset, "#", phx_change: :article_change %>
+    <%= for ac <- inputs_for(f, :article_contents) do %>
+      <%= text_input ac, :id, type: "hidden" %>
+      <%= if locale(ac) == @locale do %>
+        <%= text_input ac, :locale, type: "hidden" %>
+        <%= input_field ac, :title %>
+      <% end %>
+    <% end %>
+  </form>
+</div>

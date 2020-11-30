@@ -16,9 +16,9 @@ defmodule Paper.ArticleContent do
 
   @required ~w(locale title)a
   @optional ~w(body)a
-  def changeset(article, params) do
+  def changeset(article, attrs) do
     article
-    |> cast(params, @required ++ @optional)
+    |> cast(attrs, @required ++ @optional)
     |> validate_required(@required)
     |> put_slug()
   end

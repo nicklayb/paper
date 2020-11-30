@@ -26,12 +26,11 @@ defmodule PaperWeb.Router do
   scope "/", PaperWeb do
     pipe_through [:browser, :authenticated]
 
-    # get "/users", UserController, :index
-    get "/articles", ArticleController, :index
-    get "/articles/new", ArticleController, :new
-    post "/articles", ArticleController, :create
     delete "/logout", AuthenticationController, :delete
 
     live "/users", UserLive.Index, :index
+    live "/articles", ArticleLive.Index, :index
+    live "/articles/new", ArticleLive.Index, :new
+    live "/articles/:id/edit", ArticleLive.Edit, :edit
   end
 end

@@ -49,7 +49,7 @@ defmodule Paper.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_dashboard, "~> 0.2"},
       {:jason, "~> 1.0"},
-      {:phoenix_live_view, "~> 0.14.7"},
+      {:phoenix_live_view, "~> 0.15.0"},
 
       # Authentication
       {:ueberauth, "~> 0.6.3"},

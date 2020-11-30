@@ -58,11 +58,13 @@ defmodule PaperWeb do
     quote do
       use Phoenix.HTML
       import Phoenix.LiveView.Helpers
+      import PaperWeb.Live.Helpers
       import Phoenix.View
       import PaperWeb.ErrorHelpers
+      import PaperWeb.FormHelpers
       import PaperWeb.Gettext
       alias PaperWeb.Router.Helpers, as: Routes
-      import PaperWeb.Components
+      import PaperWeb.Shared
     end
   end
 

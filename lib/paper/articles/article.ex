@@ -12,10 +12,10 @@ defmodule Paper.Article do
 
   @required ~w(author_id)a
   @spec changeset(%Article{}, map()) :: Ecto.Changeset.t()
-  def changeset(%Article{} = article, params) do
+  def changeset(%Article{} = article, attrs) do
     article
-    |> cast(params, @required)
+    |> cast(attrs, @required)
     |> validate_required(@required)
-    |> cast_assoc(:article_contents)
+    |> cast_assoc(:article_contents, required: true)
   end
 end

@@ -1,13 +1,20 @@
 <div class="field is-grouped is-grouped-centered mb-6">
-  <div class="control">
-    <%= if @pagination.page > 1 do %>
-      <button type="button" class="button" phx-click="prev">
-        <span><</span>
+  <%= if prev?(@pagination) do %>
+    <div class="control">
+      <button type="button" class="button" phx-click="set-page" phx-value-page="1">
+        <span>First</span>
       </button>
-    <% end %>
-  </div>
+    </div>
+    <div class="control">
+      <button type="button" class="button" phx-click="prev">
+        <span class="icon">
+          <i class="material-icons">navigate_before</i>
+        </span>
+      </button>
+    </div>
+  <% end %>
 
-  <%= for i <- pagination_range(@pagination), i > 0 do %>
+  <%= for i <- pagination_range(@pagination) do %>
     <div class="control">
       <button
         type="button"
@@ -20,11 +27,21 @@
     </div>
   <% end %>
 
-  <div class="control">
-    <button type="button" class="button" phx-click="next">
-      <span>></span>
-    </button>
-  </div>
+  <%= if next?(@pagination) do %>
+    <div class="control">
+      <button type="button" class="button" phx-click="next">
+        <span class="icon">
+          <i class="material-icons">navigate_next</i>
+        </span>
+      </button>
+    </div>
+    <div class="control">
+      <button type="button" class="button" phx-click="set-page" phx-value-page="<%= last_page(@pagination) %>">
+        <span>Last</span>
+      </button>
+    </div>
+  <% end %>
+
   <div class="control">
     <form phx-change="select-per-page">
       <div class="select">

@@ -6,7 +6,7 @@ defmodule UserSeed do
       {:ok, user} = seed_user(params)
     end)
 
-    Enum.map(1..1000, fn n ->
+    Enum.map(1..200, fn n ->
       {:ok, user} = seed_user(%{
         first_name: "John",
         last_name: "Doe - #{n}",

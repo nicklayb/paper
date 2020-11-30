@@ -1,7 +1,7 @@
 defmodule PaperWeb.UserLive.Index do
   use PaperWeb, :live_view
   use PaperWeb.TableView
-  alias Paper.{User, Users}
+  alias Paper.{User, Queries.UserQuery}
   alias PaperWeb.TableView
 
   def mount(_params, _session, socket) do
@@ -10,18 +10,15 @@ defmodule PaperWeb.UserLive.Index do
   end
 
   def handle_params(params, _url, socket) do
-    socket =
-      assign(
-        socket,
-        pagination: pagination_params(params)
-      )
+    socket = assign(socket, pagination: pagination_params(params))
 
     send(self(), :update)
     {:noreply, socket}
   end
 
   def get_records(socket) do
-    Users.list(paginate: socket.assigns.pagination)
+    User
+    |> UserQuery.fetch(socket.assigns.pagination)
   end
 
   table_event_handlers()

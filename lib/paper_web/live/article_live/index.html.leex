@@ -1,0 +1,44 @@
+<%= if @show_modal do %>
+  <%= live_component @socket, Modal, id: "new-article-modal", title: "New Article", back_to: Routes.article_index_path(@socket, :index) do %>
+    <%= f = form_for @changeset, "#", phx_submit: :create_article %>
+      <%= for ac <- inputs_for f, :article_contents do %>
+        <%= select_field ac, :locale, ["en", "fr"]%>
+        <%= input_field ac, :title %>
+      <% end %>
+
+      <div class="buttons is-right">
+        <button type="button" class="button is-light" phx-click="close-modal" phx-target="<%= @modal %>">Cancel</button>
+        <%= submit "Create article", class: "button is-primary" %>
+      </div>
+    </form>
+  <% end %>
+<% end %>
+
+<%= shared "page_header.html", title: "Articles" do %>
+  <%= live_patch "New article", to: Routes.article_index_path(@socket, :new), class: "button is-primary" %>
+<% end %>
+
+<div class="container">
+  <table class="table is-fullwidth">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for article <- @records do %>
+        <tr>
+          <td><%= article.id %></td>
+          <td><%= get_title(article) %></td>
+          <td align="right">
+            <%= live_patch "Edit", to: Routes.article_edit_path(@socket, :edit, article.id), class: "button is-primary is-small" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= render(TableView, "pagination.html", pagination: @pagination) %>
+</div>
