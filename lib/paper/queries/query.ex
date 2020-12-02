@@ -12,6 +12,7 @@ defmodule Paper.Queries.Query do
         |> offset(^offset)
       end
 
+      def sort(query, %QueryParameters{sort_by: nil, sort_order: sort_order}), do: query
       def sort(query, %QueryParameters{sort_by: sort_by, sort_order: sort_order}) do
         query
         |> order_by([q], {^sort_order, ^sort_by})

@@ -73,8 +73,8 @@ defmodule PaperWeb.TableView do
         %QueryParameters{
           page: String.to_integer(params["page"] || "1"),
           per_page: String.to_integer(params["per_page"] || "10"),
-          sort_by: String.to_existing_atom(params["sort_by"]) || nil,
-          sort_order: String.to_existing_atom(params["sort_order"]) || :asc,
+          sort_by: if(params["sort_by"], do: String.to_existing_atom(params["sort_by"]), else: nil),
+          sort_order: if(params["sort_by"], do: String.to_existing_atom(params["sort_order"]), else: :asc)
         }
       end
 
