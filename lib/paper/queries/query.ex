@@ -2,9 +2,9 @@ defmodule Paper.Queries.Query do
   defmacro __using__(_) do
     quote do
       import Ecto.Query
-      alias Paper.{Queries.Pagination, Repo}
+      alias Paper.{Queries.QueryParameters, Repo}
 
-      def paginate(query, page, per_page) do
+      def paginate(query, %QueryParameters{page: page, per_page: per_page}) do
         offset = (page - 1 ) * per_page
 
         query
@@ -12,10 +12,16 @@ defmodule Paper.Queries.Query do
         |> offset(^offset)
       end
 
-      def fetch(query, %Pagination{per_page: per_page, page: page}) do
+      def sort(query, %QueryParameters{sort_by: sort_by, sort_order: sort_order}) do
+        query
+        |> order_by([q], {^sort_order, ^sort_by})
+      end
+
+      def fetch(query, %QueryParameters{} = query_parameters) do
         records =
           query
-          |> paginate(page, per_page)
+          |> paginate(query_parameters)
+          |> sort(query_parameters)
           |> Repo.all()
 
         {records, Repo.aggregate(query, :count)}

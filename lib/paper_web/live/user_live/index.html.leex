@@ -4,8 +4,8 @@
   <table class="table is-fullwidth">
     <thead>
       <tr>
-        <th><%= gettext("Email") %></th>
-        <th><%= gettext("Name") %></th>
+        <th phx-click="sort" phx-value-by="email"><%= gettext("Email") %></th>
+        <th phx-click="sort" phx-value-by="first_name"><%= gettext("Name") %></th>
       </tr>
     </thead>
     <tbody>
@@ -18,5 +18,5 @@
     </tbody>
   </table>
 
-  <%= render(TableView, "pagination.html", pagination: @pagination) %>
+  <%= render(TableView, "pagination.html", query_parameters: @query_parameters) %>
 </div>

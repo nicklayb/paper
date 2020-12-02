@@ -10,16 +10,14 @@ defmodule PaperWeb.UserLive.Index do
   end
 
   def handle_params(params, _url, socket) do
-    socket = assign(socket, pagination: pagination_params(params))
+    socket = assign(socket, query_parameters: query_parameters(params))
 
     send(self(), :update)
     {:noreply, socket}
   end
 
-  def get_records(socket) do
+  def get_records(%{assigns: %{query_parameters: query_parameters}}) do
     User
-    |> UserQuery.fetch(socket.assigns.pagination)
+    |> UserQuery.fetch(query_parameters)
   end
-
-  table_event_handlers()
 end

@@ -4,6 +4,11 @@ defmodule PaperWeb.TableView do
 
   defmacro table_event_handlers() do
     quote do
+      def handle_event("sort", %{"by" => sort_key}, socket) do
+        send(self(), {:sort, sort_key})
+        {:noreply, socket}
+      end
+
       def handle_event("prev", _, socket) do
         send(self(), :prev)
         {:noreply, socket}
@@ -26,26 +31,26 @@ defmodule PaperWeb.TableView do
     end
   end
 
-  def pagination_range(%{total_pages: total_pages} = pagination) when total_pages > 0, do: evaluate_pagination_range(pagination)
-  def pagination_range(_pagination), do: []
+  def pagination_range(%{total_pages: total_pages} = query_parameters) when total_pages > 0, do: evaluate_pagination_range(query_parameters)
+  def pagination_range(_query_parameters), do: []
 
   @number_of_pages_showned 5
-  def evaluate_pagination_range(%{total_pages: total_pages, page: page} = pagination) do
+  def evaluate_pagination_range(%{total_pages: total_pages, page: page} = query_parameters) do
     cond do
       total_pages <= @number_of_pages_showned ->
         1..total_pages
-      not prev?(pagination) || page < @number_of_pages_showned / 2 ->
+      not prev?(query_parameters) || page < @number_of_pages_showned / 2 ->
         Enum.take_while(1..total_pages, &(&1 <= @number_of_pages_showned))
-      not next?(pagination) || page > total_pages - (@number_of_pages_showned / 2) ->
+      not next?(query_parameters) || page > total_pages - (@number_of_pages_showned / 2) ->
         (total_pages - (@number_of_pages_showned - 1))..total_pages
       true ->
         (page - 2)..(page + 2)
     end
   end
 
-  def last_page(pagination), do: pagination.total_pages
-  def prev?(pagination), do: pagination.page > 1
-  def next?(pagination), do: pagination.page < pagination.total_pages
+  def last_page(query_parameters), do: query_parameters.total_pages
+  def prev?(query_parameters), do: query_parameters.page > 1
+  def next?(query_parameters), do: query_parameters.page < query_parameters.total_pages
 
 
   def per_page_options, do: [10, 25, 50]
@@ -53,54 +58,71 @@ defmodule PaperWeb.TableView do
   defmacro __using__(_) do
     quote do
       import PaperWeb.TableView
-      alias Paper.Queries.Pagination
+      alias Paper.Queries.QueryParameters
+
+      table_event_handlers()
 
       def get_records(_), do: []
 
-      def route_path(%{assigns: %{patch_route_mfa: patch_route_mfa}} = socket, path_params) do
-        {module, func, args} = patch_route_mfa
+      def route_path(%{assigns: %{patch_route_mfa: {module, func, args}}} = socket, path_params) do
         args = ([socket | args] ++ [path_params])
         apply(module, func, args)
       end
 
-      def pagination_params(params) do
-        %Pagination{
+      def query_parameters(params) do
+        %QueryParameters{
           page: String.to_integer(params["page"] || "1"),
-          per_page: String.to_integer(params["per_page"] || "10")
+          per_page: String.to_integer(params["per_page"] || "10"),
+          sort_by: String.to_existing_atom(params["sort_by"]) || nil,
+          sort_order: String.to_existing_atom(params["sort_order"]) || :asc,
         }
       end
 
-      def update_pagination(pagination, total_records) do
-        pagination = Map.put(pagination, :total_pages, ceil(total_records / pagination.per_page))
-        pagination = Map.update(pagination, :page, 1, &(if &1> pagination.total_pages, do: pagination.total_pages, else: &1))
+      def update_pagination(query_parameters, total_records) do
+        query_parameters = Map.put(query_parameters, :total_pages, ceil(total_records / query_parameters.per_page))
+        Map.update(query_parameters, :page, 1, &(if &1> query_parameters.total_pages, do: query_parameters.total_pages, else: &1))
       end
 
-      def handle_info(:update, socket) do
+      def handle_info(:update, %{assigns: %{query_parameters: query_parameters}} = socket) do
         {records, total_records} = get_records(socket)
-        socket = assign(
-          socket,
-          records: records,
-          pagination: update_pagination(socket.assigns.pagination, total_records)
-        )
+
+        query_parameters = query_parameters
+        |> update_pagination(total_records)
+
+        socket = assign(socket, records: records, query_parameters: query_parameters)
+
+        {:noreply, socket}
+      end
+
+      def handle_info({:sort, sort_key}, %{assigns: %{query_parameters: %{sort_order: :asc} = query_parameters}} = socket) do
+        route = route_path(socket, sort_by: sort_key, sort_order: :desc)
+        socket = push_patch(socket, to: route)
+
+        {:noreply, socket}
+      end
+
+      def handle_info({:sort, sort_key}, %{assigns: %{query_parameters: %{sort_order: :desc} = query_parameters}} = socket) do
+        route = route_path(socket, sort_by: sort_key, sort_order: :asc)
+        socket = push_patch(socket, to: route)
 
         {:noreply, socket}
       end
 
       def handle_info(:next, socket) do
-        pagination = socket.assigns.pagination
-        route = route_path(socket, page: pagination.page + 1, per_page: pagination.per_page)
+        query_parameters = socket.assigns.query_parameters
+        route = route_path(socket, page: query_parameters.page + 1, per_page: query_parameters.per_page)
         socket = push_patch(socket, to: route)
 
         {:noreply, socket}
       end
 
       def handle_info(:prev, socket) do
-        pagination = socket.assigns.pagination
+        query_parameters = socket.assigns.query_parameters
 
-        if pagination.page <= 1 do
+        if query_parameters.page <= 1 do
           {:noreply, socket}
         else
-          route = route_path(socket, page: pagination.page - 1, per_page: pagination.per_page)
+          route = route_path(socket, page: query_parameters.page - 1, per_page: query_parameters.per_page)
           socket = push_patch(socket, to: route)
 
           {:noreply, socket}
@@ -108,19 +130,23 @@ defmodule PaperWeb.TableView do
       end
 
       def handle_info({:set_page, page}, socket) do
-        pagination = socket.assigns.pagination
-        route = route_path(socket, page: String.to_integer(page), per_page: pagination.per_page)
+        query_parameters = socket.assigns.query_parameters
+        route = route_path(socket, page: String.to_integer(page), per_page: query_parameters.per_page)
         socket = push_patch(socket, to: route)
 
         {:noreply, socket}
       end
 
       def handle_info({:select_per_page, per_page}, socket) do
-        route = route_path(socket, page: socket.assigns.pagination.page, per_page: String.to_integer(per_page))
+        route = route_path(socket, page: socket.assigns.query_parameters.page, per_page: String.to_integer(per_page))
         socket = push_patch(socket, to: route)
 
         {:noreply, socket}
       end
+
+      # defp sort_order_icon(column, %{sort_by: sort_by, sort_order: :asc}) when column == sort_by, do: "▲"
+      # defp sort_order_icon(column, %{sort_by: sort_by, sort_order: :asc}) when column == sort_by, do: "▼"
+      # defp sort_order_icon(_, _, _), do: ""
 
       defoverridable get_records: 1
     end

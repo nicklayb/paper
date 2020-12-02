@@ -19,7 +19,7 @@ defmodule PaperWeb.ArticleLive.Index do
 
   def handle_params(params, _url, socket) do
     socket = socket
-    |> assign(pagination: pagination_params(params))
+    |> assign(query_parameters: query_parameters(params))
     |> apply_action(socket.assigns.live_action, params)
 
     send(self(), :update)
@@ -35,7 +35,7 @@ defmodule PaperWeb.ArticleLive.Index do
   def get_records(socket) do
     Article
     |> ArticleQuery.preload()
-    |> ArticleQuery.fetch(socket.assigns.pagination)
+    |> ArticleQuery.fetch(socket.assigns.query_parameters)
   end
 
   table_event_handlers()
